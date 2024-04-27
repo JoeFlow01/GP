@@ -34,7 +34,7 @@
                 color: 0, 0, 0, 1
 
         HoverButton:  # Adjusted for HoverBehavior
-
+            on_touch_down: app.go_to_SignLanguageToSpeechPage()
             orientation: 'vertical'
             size_hint_y: None
             height: dp(160)  # Adjust based on your total available height
@@ -73,6 +73,7 @@
                 color: 0, 0, 0, 1
 
         HoverButton:  # Adjusted for HoverBehavior
+            on_touch_down: app.go_to_TextToSpeechPage()
             orientation: 'vertical'
             size_hint_y: None
             height: dp(160)
@@ -91,6 +92,7 @@
                 color: 0, 0, 0, 1
 
         HoverButton:  # Adjusted for HoverBehavior with arrow icon beside speech to text
+            on_touch_down: app.go_to_SpeechToSignLanguagePage()
             orientation: 'vertical'
             size_hint_y: None
             height: dp(160)

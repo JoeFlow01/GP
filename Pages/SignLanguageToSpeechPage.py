@@ -44,5 +44,8 @@ class CameraApp(App):
         return CameraPage()
 
 
-if __name__ == '__main__':
+def start_SignLanguageToSpeechPage():
     CameraApp().run()
+
+
+#start_SignLanguageToSpeechPage()

@@ -8,6 +8,7 @@ from kivy.factory import Factory
 from kivy.uix.boxlayout import BoxLayout
 from kivy.graphics import Color, Rectangle
 
+
 class HoverBehavior(object):
     hovered = BooleanProperty(False)
     border_point = ObjectProperty(None)
@@ -38,7 +39,9 @@ class HoverBehavior(object):
     def on_leave(self):
         pass
 
+
 Factory.register('HoverBehavior', cls=HoverBehavior)
+
 
 class HoverButton(BoxLayout, HoverBehavior):
     def __init__(self, **kwargs):
@@ -59,26 +62,35 @@ class HoverButton(BoxLayout, HoverBehavior):
     def on_leave(self):
         self.bg_color.rgba = (1, 1, 1, 1)  # Change back to white when not hovered
 
+
 class MyApp(App):
     def build(self):
         self.screen_manager = ScreenManager()
         self.screen_manager.add_widget(SplashScreen(name='SplashScreen'))
         self.screen_manager.add_widget(HomePage(name='HomePage'))
-        # self.screen_manager.add_widget(TextToSpeechPage(name='TextToSpeechPage'))
         Clock.schedule_once(self.go_to_home, 2)
         return self.screen_manager
 
     def go_to_home(self, dt):
         self.screen_manager.current = 'HomePage'
 
+    def go_to_TextToSpeechPage(self):
+        print("Text To Speeech")
+
+    def go_to_SpeechToSignLanguagePage(self):
+        print("Speech to SignLang")
+
+    def go_to_SignLanguageToSpeechPage(self):
+        print("Trying to go to SingLang to speech page")
+
+
 class SplashScreen(Screen):
     pass
+
 
 class HomePage(Screen):
     pass
 
-# class TextToSpeechPage(Screen):
-#     pass
 
 if __name__ == '__main__':
     Builder.load_file('HomePage.kv')

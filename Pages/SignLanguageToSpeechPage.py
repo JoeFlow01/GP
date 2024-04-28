@@ -48,4 +48,4 @@ def start_SignLanguageToSpeechPage():
     CameraApp().run()
 
 
-#start_SignLanguageToSpeechPage()
+start_SignLanguageToSpeechPage()

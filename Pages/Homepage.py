@@ -8,6 +8,8 @@ from kivy.factory import Factory
 from kivy.uix.boxlayout import BoxLayout
 from kivy.graphics import Color, Rectangle
 
+screen_manager = ScreenManager()
+
 
 class HoverBehavior(object):
     hovered = BooleanProperty(False)
@@ -38,7 +40,6 @@ class HoverBehavior(object):
 
     def on_leave(self):
         pass
-
 
 
 Factory.register('HoverBehavior', cls=HoverBehavior)
@@ -77,25 +78,29 @@ class HoverButton(BoxLayout, HoverBehavior):
 
     def go_to_TextToSpeechPage(self):
         print("Text To Speeech")
+        screen_manager.current = 'TextToSpeechPage'
 
     def go_to_SpeechToSignLanguagePage(self):
         print("Speech to SignLang")
+        screen_manager.current = 'SpeechToSignLanguagePage'
 
     def go_to_SignLanguageToSpeechPage(self):
-        print("Trying to go to SingLang to speech page")
+        print("Trying to go to SingLang to speech page,no kv file available ")
 
 
 class MyApp(App):
     def build(self):
-        self.screen_manager = ScreenManager()
+        self.title = "Helping you"
+        self.screen_manager = screen_manager
         self.screen_manager.add_widget(SplashScreen(name='SplashScreen'))
         self.screen_manager.add_widget(HomePage(name='HomePage'))
+        self.screen_manager.add_widget(SpeechToSignLanguagePage(name='SpeechToSignLanguagePage'))
+        self.screen_manager.add_widget(TextToSpeechPage(name='TextToSpeechPage'))
         Clock.schedule_once(self.go_to_home, 2)
         return self.screen_manager
 
     def go_to_home(self, dt):
         self.screen_manager.current = 'HomePage'
-
 
 
 class SplashScreen(Screen):
@@ -106,6 +111,16 @@ class HomePage(Screen):
     pass
 
 
+class SpeechToSignLanguagePage(Screen):
+    pass
+
+
+class TextToSpeechPage(Screen):
+    pass
+
+
 if __name__ == '__main__':
     Builder.load_file('HomePage.kv')
+    Builder.load_file('SpeechToSignLanguagePage.kv')
+    Builder.load_file('TextToSpeechPage.kv')
     MyApp().run()

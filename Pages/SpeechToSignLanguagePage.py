@@ -19,11 +19,6 @@ class BlindDeafCommunicationApp(App):
         return BlindDeafCommunicationLayout()
 
 
-def start_SpeechToSignLangauge():
-    Builder.load_file("SpeechToSignLanguagePage.kv")
-    BlindDeafCommunicationApp().run()
-
-
 if __name__ == '__main__':
     Builder.load_file("SpeechToSignLanguagePage.kv")
     BlindDeafCommunicationApp().run()

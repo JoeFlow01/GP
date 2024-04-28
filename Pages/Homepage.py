@@ -40,6 +40,7 @@ class HoverBehavior(object):
         pass
 
 
+
 Factory.register('HoverBehavior', cls=HoverBehavior)
 
 
@@ -62,6 +63,27 @@ class HoverButton(BoxLayout, HoverBehavior):
     def on_leave(self):
         self.bg_color.rgba = (1, 1, 1, 1)  # Change back to white when not hovered
 
+    def on_touch_down(self, touch):
+        if self.collide_point(*touch.pos):
+            # Check the action property and perform the corresponding action
+            if self.action == 'text_to_speech':
+                self.go_to_TextToSpeechPage()  # Call the appropriate method
+            elif self.action == 'speech_to_sign_language':
+                self.go_to_SpeechToSignLanguagePage()  # Call the appropriate method
+            elif self.action == 'sign_language_to_speech':
+                self.go_to_SignLanguageToSpeechPage()  # Call the appropriate method
+            return True
+        return super(HoverButton, self).on_touch_down(touch)
+
+    def go_to_TextToSpeechPage(self):
+        print("Text To Speeech")
+
+    def go_to_SpeechToSignLanguagePage(self):
+        print("Speech to SignLang")
+
+    def go_to_SignLanguageToSpeechPage(self):
+        print("Trying to go to SingLang to speech page")
+
 
 class MyApp(App):
     def build(self):
@@ -74,14 +96,6 @@ class MyApp(App):
     def go_to_home(self, dt):
         self.screen_manager.current = 'HomePage'
 
-    def go_to_TextToSpeechPage(self):
-        print("Text To Speeech")
-
-    def go_to_SpeechToSignLanguagePage(self):
-        print("Speech to SignLang")
-
-    def go_to_SignLanguageToSpeechPage(self):
-        print("Trying to go to SingLang to speech page")
 
 
 class SplashScreen(Screen):

@@ -26,3 +26,13 @@
             center_y: root.height / 2 - 250  # Move the button downward
             padding: 10
             on_press: root.speak()
+
+
+        Button:
+            text: 'Home'
+            size_hint: None, None
+            size: 250, 50
+            center_x: root.width / 2
+            center_y: root.height / 2 - 350  # Move the button upward
+            padding: 10
+            on_press: root.go_to_home()

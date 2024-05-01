@@ -7,6 +7,7 @@ from kivy.core.window import Window
 from kivy.factory import Factory
 from kivy.uix.boxlayout import BoxLayout
 from kivy.graphics import Color, Rectangle
+import pyttsx3
 
 screen_manager = ScreenManager()
 
@@ -116,7 +117,25 @@ class SpeechToSignLanguagePage(Screen):
 
 
 class TextToSpeechPage(Screen):
-    pass
+    engine = pyttsx3.init()
+    screen_manager = screen_manager
+
+    def go_to_home(self):
+        self.screen_manager.current = 'HomePage'
+
+    def speak(self):
+        text_input = self.ids.text_input  # Accessing the text input widget
+        text = text_input.text  # Getting the text from the text input
+        if text:
+            print("Text entered:", text)  # Print the text for testing
+            self.engine.say(text)
+            self.engine.runAndWait()
+        else:
+            text = "Please enter text "
+            print("Text entered:", text)  # Print the text for testing
+            self.engine.say(text)
+            self.engine.runAndWait()
+        # Add your logic to convert text to speech here
 
 
 if __name__ == '__main__':

@@ -113,7 +113,21 @@ class HomePage(Screen):
 
 
 class SpeechToSignLanguagePage(Screen):
-    pass
+    video_playing = False
+    screen_manager = screen_manager
+
+    def control_video(self, video_element, play_pause_btn):
+        if self.video_playing:
+            video_element.state = 'pause'
+            self.video_playing = False
+            play_pause_btn.text = "Play"
+        else:
+            video_element.state = 'play'
+            self.video_playing = True
+            play_pause_btn.text = "Pause"
+
+    def go_to_home(self):
+        self.screen_manager.current = 'HomePage'
 
 
 class TextToSpeechPage(Screen):
@@ -135,7 +149,6 @@ class TextToSpeechPage(Screen):
             print("Text entered:", text)  # Print the text for testing
             self.engine.say(text)
             self.engine.runAndWait()
-        # Add your logic to convert text to speech here
 
 
 if __name__ == '__main__':

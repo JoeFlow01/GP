@@ -126,8 +126,13 @@ class SpeechToSignLanguagePage(Screen):
             self.video_playing = True
             play_pause_btn.text = "Pause"
 
-    def go_to_home(self):
+    def go_to_home(self,video_element,play_pause_btn):
+        video_element.state = 'pause'
+        play_pause_btn.text = "Play"
         self.screen_manager.current = 'HomePage'
+
+    def change_vid(self, video_element, source):
+        video_element.source = source
 
 
 class TextToSpeechPage(Screen):

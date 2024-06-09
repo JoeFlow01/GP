@@ -1,3 +1,4 @@
+import pyttsx3
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
@@ -7,7 +8,8 @@ from kivy.core.window import Window
 from kivy.factory import Factory
 from kivy.uix.boxlayout import BoxLayout
 from kivy.graphics import Color, Rectangle
-import pyttsx3
+from kivy.animation import Animation
+import threading
 
 screen_manager = ScreenManager()
 
@@ -24,11 +26,11 @@ class HoverBehavior(object):
 
     def on_mouse_pos(self, *args):
         if not self.get_root_window():
-            return  # Widget is not displayed
+            return
         pos = args[1]
         inside = self.collide_point(*self.to_window(*pos))
         if self.hovered == inside:
-            return  # The hover state has not changed
+            return
         self.border_point = pos
         self.hovered = inside
         if inside:
@@ -50,9 +52,8 @@ class HoverButton(BoxLayout, HoverBehavior):
     def __init__(self, **kwargs):
         super(HoverButton, self).__init__(**kwargs)
         with self.canvas.before:
-            self.bg_color = Color(1, 1, 1, 1)  # Set background color to white
+            self.bg_color = Color(0.6, 0.6, 0.6, 1)
             self.rect = Rectangle(pos=self.pos, size=self.size)
-
         self.bind(pos=self.update_rect, size=self.update_rect)
 
     def update_rect(self, *args):
@@ -60,33 +61,30 @@ class HoverButton(BoxLayout, HoverBehavior):
         self.rect.size = self.size
 
     def on_enter(self):
-        self.bg_color.rgba = (0.8, 0.8, 0.8, 1)  # Change to light grey on hover
+        self.bg_color.rgba = (0.8, 0.8, 0.8, 1)
 
     def on_leave(self):
-        self.bg_color.rgba = (1, 1, 1, 1)  # Change back to white when not hovered
+        self.bg_color.rgba = (0.65, 0.65, 0.65, 1)
 
     def on_touch_down(self, touch):
         if self.collide_point(*touch.pos):
-            # Check the action property and perform the corresponding action
             if self.action == 'text_to_speech':
-                self.go_to_TextToSpeechPage()  # Call the appropriate method
+                self.go_to_TextToSpeechPage()
             elif self.action == 'speech_to_sign_language':
-                self.go_to_SpeechToSignLanguagePage()  # Call the appropriate method
+                self.go_to_SpeechToSignLanguagePage()
             elif self.action == 'sign_language_to_speech':
-                self.go_to_SignLanguageToSpeechPage()  # Call the appropriate method
+                self.go_to_SignLanguageToSpeechPage()
             return True
         return super(HoverButton, self).on_touch_down(touch)
 
     def go_to_TextToSpeechPage(self):
-        print("Text To Speeech")
         screen_manager.current = 'TextToSpeechPage'
 
     def go_to_SpeechToSignLanguagePage(self):
-        print("Speech to SignLang")
         screen_manager.current = 'SpeechToSignLanguagePage'
 
     def go_to_SignLanguageToSpeechPage(self):
-        print("Trying to go to SingLang to speech page,no kv file available ")
+        print("Trying to go to SignLang to speech page, no kv file available")
 
 
 class MyApp(App):
@@ -126,7 +124,7 @@ class SpeechToSignLanguagePage(Screen):
             self.video_playing = True
             play_pause_btn.text = "Pause"
 
-    def go_to_home(self,video_element,play_pause_btn):
+    def go_to_home(self, video_element, play_pause_btn):
         video_element.state = 'pause'
         play_pause_btn.text = "Play"
         self.screen_manager.current = 'HomePage'
@@ -139,21 +137,57 @@ class TextToSpeechPage(Screen):
     engine = pyttsx3.init()
     screen_manager = screen_manager
 
+    def __init__(self, **kwargs):
+        super(TextToSpeechPage, self).__init__(**kwargs)
+        self.engine.connect('started-utterance', self.on_speech_start)
+        self.engine.connect('finished-utterance', self.on_speech_end)
+        self.animation = None
+
     def go_to_home(self):
         self.screen_manager.current = 'HomePage'
 
     def speak(self):
-        text_input = self.ids.text_input  # Accessing the text input widget
-        text = text_input.text  # Getting the text from the text input
+        text_input = self.ids.text_input
+        text = text_input.text
         if text:
-            print("Text entered:", text)  # Print the text for testing
             self.engine.say(text)
-            self.engine.runAndWait()
+            threading.Thread(target=self.engine.runAndWait).start()
         else:
-            text = "Please enter text "
-            print("Text entered:", text)  # Print the text for testing
+            text = "Please enter text"
             self.engine.say(text)
-            self.engine.runAndWait()
+            threading.Thread(target=self.engine.runAndWait).start()
+
+    def on_speech_start(self, name):
+        self.show_speech_feedback()
+
+    def on_speech_end(self, name, completed):
+        self.stop_speech_feedback()
+
+    def show_speech_feedback(self):
+        label = self.ids.speech_feedback
+        icon = self.ids.sound_icon
+        self.animation = Animation(opacity=1, duration=0.5) + Animation(opacity=0, duration=0.5)
+        self.animation.repeat = True
+        self.animation.start(label)
+        icon.opacity = 1
+
+    def stop_speech_feedback(self):
+        if self.animation:
+            self.animation.stop(self.ids.speech_feedback)
+            self.ids.speech_feedback.opacity = 0
+        self.ids.sound_icon.opacity = 0
+
+    def set_voice(self, voice):
+        voices = self.engine.getProperty('voices')
+        if voice == 'Female':
+            self.engine.setProperty('voice', voices[0].id)
+        elif voice == 'Male':
+            self.engine.setProperty('voice', voices[1].id)
+        else:
+            self.engine.setProperty('voice', voices[0].id)
+
+    def clear_text(self):
+        self.ids.text_input.text = ''
 
 
 if __name__ == '__main__':

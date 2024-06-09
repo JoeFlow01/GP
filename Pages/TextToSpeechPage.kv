@@ -1,38 +1,215 @@
 <TextToSpeechPage>:
     canvas.before:
-        Color:
-            rgba: 35/255.0, 181/255.0, 196/255.0, 1  # #23b5c4
         Rectangle:
-            size: self.size
+            source: '../Assets/bluebg.jpg'
             pos: self.pos
+            size: self.size
 
-    RelativeLayout:
+    BoxLayout:
+        orientation: 'vertical'
+        padding: [dp(20), dp(20), dp(20), dp(20)]
+        spacing: dp(10)
+
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: 0.1
+            canvas.before:
+                Color:
+                    rgba: 0.7, 0.7, 0.7, 1
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [dp(10), dp(10), dp(10), dp(10)]
+
+            Button:
+                id: back_button
+                size_hint_x: 0.15
+                background_normal: ''
+                background_color: 0, 0, 0, 0
+                on_release:
+                    root.go_to_home()
+                canvas.before:
+                    Color:
+                        rgba: (0.14, 0.71, 0.77, 1)
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [dp(10), dp(10), dp(10), dp(10)]
+
+                Image:
+                    id: back_icon
+                    source: '../Assets/back.png'
+                    size_hint: None, None
+                    size: min(self.parent.width, self.parent.height) * 0.7, min(self.parent.width, self.parent.height) * 0.7
+                    pos: (self.parent.center_x - self.width / 2, self.parent.center_y - self.height / 2)
+                    on_size:
+                        self.size = (min(back_button.width, back_button.height) * 0.7, min(back_button.width, back_button.height) * 0.7)
+                        self.pos = (back_button.center_x - self.width / 2, back_button.center_y - self.height / 2)
+                   
+
+
+            Label:
+                text: 'Text to Speech'
+                color: 0, 0, 0, 1
+                font_size: min(self.height * 0.5, self.width * 0.1) 
+                size_hint_x: 0.8
+                halign: 'center'
+                valign: 'middle'
+                text_size: self.size
+
+            Widget:
+                size_hint_x: 0.1
+
         TextInput:
             id: text_input
-            hint_text: 'Enter text here'
-            size_hint: None, None
-            size: 900, 500
-            multiline: False
-            center_x: root.width / 2
-            center_y: root.height / 2 + 50  # Adjust vertically
-            padding: 10
+            hint_text: 'Please enter text'
+            font_size: min(self.height * 0.11, self.width * 0.07)
+            size_hint_y: 0.4
+            multiline: True
+            background_color: 230/255.0, 230/255.0, 230/255.0, 1
+            foreground_color: 0, 0, 0, 1
+
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: 0.1
+            spacing: dp(10)
+            padding: [dp(50), 0]
+
+            Button:
+                text: 'Say Aloud'
+                size_hint_x: 0.5
+                background_normal: ''
+                background_color: 0, 0, 0, 0
+                color: 1, 1, 1, 1
+                font_size: min(self.height * 0.38, self.width * 0.28)
+                text_size: self.size
+                halign: 'center'
+                valign: 'middle'
+                on_release:
+                    root.speak()
+                canvas.before:
+                    Color:
+                        rgba: (0.14, 0.71, 0.77, 1)
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [dp(10), dp(10), dp(10), dp(10)]
+
+            Button:
+                text: 'Clear Text'
+                size_hint_x: 0.5
+                background_normal: ''
+                background_color: 0, 0, 0, 0
+                color: 1, 1, 1, 1
+                font_size: min(self.height * 0.38, self.width * 0.28)
+                text_size: self.size
+                halign: 'center'
+                valign: 'middle'
+                on_release:
+                    root.clear_text()
+                canvas.before:
+                    Color:
+                        rgba: (0.77, 0.14, 0.14, 1)
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [dp(10), dp(10), dp(10), dp(10)]
+
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: 0.1
+            spacing: dp(10)
+            pos_hint: {'center_x': 0.5}
+
+            Widget:
+                size_hint_x: 0.5
+
+            Label:
+                id: speech_feedback
+                text: 'Speaking...'
+                opacity: 0
+                color: 0, 0, 0, 1
+                font_size: '16sp'
+                halign: 'center'
+                valign: 'middle'
+                size_hint: None, None
+                size: self.texture_size
+
+            Image:
+                id: sound_icon
+                source: '../Assets/sound.png'
+                size_hint: None, None
+                size: dp(24), dp(24)
+                opacity: 0
+                center_y: self.parent.center_y
+
+            Widget:
+                size_hint_x: 0.5
+
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: 0.1
+            spacing: dp(10)
+
+            Label:
+                text: 'Voice:'
+                color: 0, 0, 0, 1  # Black text
+                size_hint_x: None
+                width: self.parent.width * 0.2
+                font_size: min(self.height * 0.4, self.width * 0.3)
+                valign: 'middle'
+
+            Spinner:
+                id: voice_spinner
+                text: 'Default'
+                values: ['Male', 'Female']
+                size_hint_x: None
+                font_size: min(self.height * 0.32, self.width * 0.22)
+                width: self.parent.width * 0.3  
+                background_color: 0.8, 0.75, 0.7, 1  
+                color: 0.14, 0.71, 0.77, 1
+                on_text:
+                    root.set_voice(self.text)
 
 
-        Button:
-            text: 'Convert Text to Speech'
-            size_hint: None, None
-            size: 250, 50
-            center_x: root.width / 2
-            center_y: root.height / 2 - 250  # Move the button downward
-            padding: 10
-            on_press: root.speak()
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: 0.1
+            spacing: dp(10)
 
+            Label:
+                text: 'Volume:'
+                color: 0, 0, 0, 1
+                size_hint_x: 0.2
+                font_size: min(self.height * 0.4, self.width * 0.3)
+                valign: 'middle'
 
-        Button:
-            text: 'Home'
-            size_hint: None, None
-            size: 250, 50
-            center_x: root.width / 2
-            center_y: root.height / 2 - 350  # Move the button upward
-            padding: 10
-            on_press: root.go_to_home()
+            Slider:
+                min: 0
+                max: 1
+                value: 1
+                step: 0.01
+                size_hint_x: 0.8
+                on_value:
+                    root.engine.setProperty('volume', self.value)
+
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: 0.1
+            spacing: dp(10)
+
+            Label:
+                text: 'Speed:'
+                color: 0, 0, 0, 1
+                size_hint_x: 0.2
+                font_size: min(self.height * 0.4, self.width * 0.3)
+                valign: 'middle'
+
+            Slider:
+                min: 50
+                max: 200
+                value: 150
+                step: 1
+                size_hint_x: 0.8
+                on_value:
+                    root.engine.setProperty('rate', self.value)

@@ -9,68 +9,58 @@
     RelativeLayout:
         Label:
             text: "Choose phrase to translate"
-            font_size: '32sp'
+            font_size: (root.width + root.height) * 0.02
             color: 0, 0, 0, 1
             size_hint: None, None
             size: self.texture_size
-            center_x: root.width / 2
-            center_y: root.height / 2 + 320  # Position the label above the buttons
+            center_x: self.parent.width * 0.5
+            center_y: root.height * 0.92  # Position the label above the buttons
 
         GridLayout:
             cols: 4
             rows: 2
-            spacing: 10, 10
+            spacing: 10
             padding: [20, 20, 20, 20]
-            size_hint: None, None
-            width: 700  # 90% of the parent width
-            height: 200  # Fixed height
-            pos_hint: {'center_x': 0.5, 'center_y': 0.75}  # Center the grid layout
+            size_hint: 0.9, 0.2  # Make the grid layout responsive
+            pos_hint: {'center_x': 0.5, 'center_y': 0.8}  # Center the grid layout
 
             Button:
-                size_hint: None, None
-                size: 150, 50
+                size_hint: 0.2, 0.5
                 text: "Hello"
                 on_press: root.change_vid(video_element, "../Videos/Hello.mp4")
 
             Button:
-                size_hint: None, None
-                size: 150, 50
+                size_hint: 0.2, 0.5
                 text: "Help"
                 on_press: root.change_vid(video_element, "../Videos/Help.mp4")
 
             Button:
-                size_hint: None, None
-                size: 150, 50
-                text: "Thank you"
+                size_hint: 0.2, 0.5
+                text: "Thanks"
                 on_press: root.change_vid(video_element, "../Videos/Thanks.mp4")
 
             Button:
-                size_hint: None, None
-                size: 150, 50
+                size_hint: 0.2, 0.5
                 text: "I love you"
                 on_press: root.change_vid(video_element, "../Videos/Iloveyou.mp4")
 
             Button:
-                size_hint: None, None
-                size: 150, 50
+                size_hint: 0.2, 0.5
                 text: "Sorry"
                 on_press: root.change_vid(video_element, "../Videos/Sorry.mp4")
 
             Button:
-                size_hint: None, None
-                size: 150, 50
+                size_hint: 0.2, 0.5
                 text: "Eat"
                 on_press: root.change_vid(video_element, "../Videos/Eat.mp4")
 
             Button:
-                size_hint: None, None
-                size: 150, 50
+                size_hint: 0.2, 0.5
                 text: "Yes"
                 on_press: root.change_vid(video_element, "../Videos/Yes.mp4")
 
             Button:
-                size_hint: None, None
-                size: 150, 50
+                size_hint: 0.2, 0.5
                 text: "No"
                 on_press: root.change_vid(video_element, "../Videos/No.mp4")
 
@@ -78,27 +68,21 @@
         Video:
             id: video_element
             source: '../Videos/No.mp4'  # Path to your video file
-            size_hint: None, None
-            size: 500, 350  # Adjust size as needed
+            size_hint: 0.8, 0.4  # Adjust size as needed
             state: "pause"
-            center_x: root.width / 2
-            center_y: root.height / 2 - 50  # Adjust vertically, moved down
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}  # Center the video element
             options: {'eos': 'loop'}
 
         Button:
             id: play_pause_btn
             text: "Play"  # Button text
-            size_hint: None, None
-            size: 100, 50  # Adjust size as needed
-            center_x: root.width / 2
-            center_y: root.height / 2 - 270  # Position below video
+            size_hint: 0.2, 0.1  # Adjust size as needed
+            pos_hint: {'center_x': 0.5, 'center_y': 0.2}  # Position below video
             on_press: root.control_video(video_element, play_pause_btn)  # Bind to Python function
 
         Button:
             id: home_btn
             text: "Home"  # Button text
-            size_hint: None, None
-            size: 100, 50  # Button fills the RelativeLayout
-            center_x: root.width / 2
-            center_y: root.height / 2 - 350  # Position below video
+            size_hint: 0.2, 0.1  # Button fills the RelativeLayout
+            pos_hint: {'center_x': 0.5, 'center_y': 0.1}  # Position below play button
             on_press: root.go_to_home(video_element, play_pause_btn)  # Bind to Python function for home action

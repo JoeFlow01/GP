@@ -1,7 +1,14 @@
 <SplashScreen>:
-    BoxLayout:
-        orientation: 'vertical'
+    FloatLayout:
         Image:
-            source: 'Assets/download.jpeg'  # Replace with your splash image path
+            source: 'Assets/download.jpeg'  
+            allow_stretch: False
+            keep_ratio: True
+            size_hint: None, None
+            size: self.parent.width * 0.6, self.parent.height * 0.6
+            pos_hint: {'center_x': 0.5, 'center_y': 0.6}
         Label:
             text: 'Loading...'
+            size_hint: None, None
+            font_size: '24sp'  
+            pos_hint: {'center_x': 0.5, 'center_y': 0.3}

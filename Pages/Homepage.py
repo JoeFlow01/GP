@@ -1,3 +1,4 @@
+import playsound
 import pyttsx3
 from kivy.app import App
 from kivy.lang import Builder
@@ -10,6 +11,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.graphics import Color, Rectangle
 from kivy.animation import Animation
 import threading
+import speech_recognition as sr
 
 screen_manager = ScreenManager()
 
@@ -114,23 +116,63 @@ class SpeechToSignLanguagePage(Screen):
     video_playing = False
     screen_manager = screen_manager
 
-    def control_video(self, video_element, play_pause_btn):
-        if self.video_playing:
-            video_element.state = 'pause'
-            self.video_playing = False
-            play_pause_btn.text = "Play"
-        else:
-            video_element.state = 'play'
-            self.video_playing = True
-            play_pause_btn.text = "Pause"
+    def recognize_speech_from_mic(self, video_element, displayer_label):
+        def update_label_to_listening(dt):
+            displayer_label.text = "Listening"
+            # Start the speech recognition in a separate thread to avoid blocking the UI
 
-    def go_to_home(self, video_element, play_pause_btn):
+        # Pause the video element
         video_element.state = 'pause'
-        play_pause_btn.text = "Play"
-        self.screen_manager.current = 'HomePage'
+        # Schedule the label update function to run after 0.1 seconds
+        Clock.schedule_once(update_label_to_listening, 0.1)
+        threading.Thread(target=self.start_listening, args=(video_element, displayer_label)).start()
 
-    def change_vid(self, video_element, source):
-        video_element.source = source
+    def start_listening(self, video_element, displayer_label):
+        recognizer = sr.Recognizer()
+        with sr.Microphone() as mic:
+            try:
+                print("Listening...")
+                recognizer.adjust_for_ambient_noise(mic, duration=0.2)
+                recognizer.energy_threshold = 4000
+                audio = recognizer.listen(mic, timeout=5, phrase_time_limit=5)
+                print("Audio recording done")
+                try:
+                    text = recognizer.recognize_google(audio)
+                    displayer_label.text = f"Recognized text: {text}"
+                    text = text.lower()
+                    text = text.replace(" ", "")
+
+                    if text in ["eat", "hello", "help", "iloveyou", "no", "sorry", "thankyou", "yes"]:
+                        source = "../Videos/" + text + ".mp4"
+                    else:
+                        source = "../Videos/invalid.mp4"
+
+                    video_element.source = source
+                    video_element.state = 'play'
+
+                    print(f"Recognized text: {text}")
+                    return text
+
+                except sr.UnknownValueError:
+                    displayer_label.text = "Google Speech Recognition could not understand audio"
+                    print("Google Speech Recognition could not understand audio")
+                    return "Could not understand audio"
+                except sr.RequestError as e:
+                    displayer_label.text = f"Could not request results; {e}"
+                    print(f"Could not request results from Google Speech Recognition service; {e}")
+                    return "API unavailable"
+            except sr.WaitTimeoutError:
+                displayer_label.text = 'Listening timed out while waiting for phrase to start'
+                print('Listening timed out while waiting for phrase to start')
+                return "Listening timed out"
+            except Exception as e:
+                displayer_label.text = f"An error occurred: {e}"
+                print(f"An error occurred: {e}")
+                return "An error occurred"
+
+    def go_to_home(self, video_element):
+        video_element.state = 'pause'
+        self.screen_manager.current = 'HomePage'
 
 
 class TextToSpeechPage(Screen):

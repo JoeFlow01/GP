@@ -74,17 +74,41 @@
         font_size: (root.width + root.height) * 0.02
         color: 0, 0, 0, 1
 
-    HoverButton: # Adjusted for HoverBehavior
+    HoverButton:
       action: 'text_to_speech'
       orientation: 'vertical'
       size_hint_y: 0.2
       padding: '5dp'
       spacing: '5dp'
-      Image:
-        source: '../Assets/texttospeech.png'
-        allow_stretch: True
-        keep_ratio: True
-        width: self.parent.width * 0.2
+      BoxLayout:
+        orientation: 'horizontal'
+        size_hint_x: 0.8
+        pos_hint: {'center_x': 0.5}
+        spacing: 0
+        Image:
+          source: '../Assets/text.png'
+          allow_stretch: True
+          keep_ratio: True
+          size_hint_x: 0.4
+          width: self.parent.width * 0.2
+
+
+        Image:
+          source: '../Assets/bluearrow.png'
+          allow_stretch: True
+          keep_ratio: True
+          size_hint_x: 0.1
+          width: self.parent.width * 0.1
+
+
+        Image:
+          source: '../Assets/voice.png'
+          allow_stretch: True
+          keep_ratio: True
+          size_hint_x: 0.4
+          width: self.parent.width * 0.2
+
+
       Label:
         text: 'Text to Speech'
         height: self.parent.height * 0.05

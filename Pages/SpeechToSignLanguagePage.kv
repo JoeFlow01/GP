@@ -8,7 +8,7 @@
 
     RelativeLayout:
         Label:
-            text: "Choose phrase to translate"
+            text: "Speech to Sign Language"
             font_size: (root.width + root.height) * 0.02
             color: 0, 0, 0, 1
             size_hint: None, None
@@ -16,73 +16,38 @@
             center_x: self.parent.width * 0.5
             center_y: root.height * 0.92  # Position the label above the buttons
 
-        GridLayout:
-            cols: 4
-            rows: 2
-            spacing: 10
-            padding: [20, 20, 20, 20]
-            size_hint: 0.9, 0.2  # Make the grid layout responsive
-            pos_hint: {'center_x': 0.5, 'center_y': 0.8}  # Center the grid layout
+        Button:
+            text: "Start Listening"
+            font_size: (root.width + root.height) * 0.015
+            size_hint: 0.5, 0.1  # Make the grid layout responsive
+            pos_hint: { 'center_x': 0.5, 'center_y': 0.8 }  # Center the grid layout
+            on_press: root.recognize_speech_from_mic(video_element,displayer_label)
 
-            Button:
-                size_hint: 0.2, 0.5
-                text: "Hello"
-                on_press: root.change_vid(video_element, "../Videos/Hello.mp4")
-
-            Button:
-                size_hint: 0.2, 0.5
-                text: "Help"
-                on_press: root.change_vid(video_element, "../Videos/Help.mp4")
-
-            Button:
-                size_hint: 0.2, 0.5
-                text: "Thanks"
-                on_press: root.change_vid(video_element, "../Videos/Thanks.mp4")
-
-            Button:
-                size_hint: 0.2, 0.5
-                text: "I love you"
-                on_press: root.change_vid(video_element, "../Videos/Iloveyou.mp4")
-
-            Button:
-                size_hint: 0.2, 0.5
-                text: "Sorry"
-                on_press: root.change_vid(video_element, "../Videos/Sorry.mp4")
-
-            Button:
-                size_hint: 0.2, 0.5
-                text: "Eat"
-                on_press: root.change_vid(video_element, "../Videos/Eat.mp4")
-
-            Button:
-                size_hint: 0.2, 0.5
-                text: "Yes"
-                on_press: root.change_vid(video_element, "../Videos/Yes.mp4")
-
-            Button:
-                size_hint: 0.2, 0.5
-                text: "No"
-                on_press: root.change_vid(video_element, "../Videos/No.mp4")
+        Label:
+            text: "Recorded text will be displayed here"
+            id : displayer_label
+            font_size: (root.width + root.height) * 0.015
+            color: 0, 0, 0, 1
+            size_hint: None, None
+            size: self.texture_size
+            center_x: self.parent.width * 0.5
+            center_y: root.height * 0.65  # Position the label above the buttons
 
     RelativeLayout:
         Video:
             id: video_element
-            source: '../Videos/No.mp4'  # Path to your video file
+            #source: '../Videos/No.mp4'  # Path to your video file
             size_hint: 0.8, 0.4  # Adjust size as needed
             state: "pause"
-            pos_hint: {'center_x': 0.5, 'center_y': 0.5}  # Center the video element
+            pos_hint: {'center_x': 0.5, 'center_y': 0.4}  # Center the video element
             options: {'eos': 'loop'}
 
-        Button:
-            id: play_pause_btn
-            text: "Play"  # Button text
-            size_hint: 0.2, 0.1  # Adjust size as needed
-            pos_hint: {'center_x': 0.5, 'center_y': 0.2}  # Position below video
-            on_press: root.control_video(video_element, play_pause_btn)  # Bind to Python function
+
 
         Button:
             id: home_btn
+            font_size: (root.width + root.height) * 0.01
             text: "Home"  # Button text
             size_hint: 0.2, 0.1  # Button fills the RelativeLayout
             pos_hint: {'center_x': 0.5, 'center_y': 0.1}  # Position below play button
-            on_press: root.go_to_home(video_element, play_pause_btn)  # Bind to Python function for home action
+            on_press: root.go_to_home(video_element)  # Bind to Python function for home action

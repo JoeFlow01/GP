@@ -28,10 +28,13 @@
             id : displayer_label
             font_size: (root.width + root.height) * 0.015
             color: 0, 0, 0, 1
-            size_hint: None, None
+            size_hint: 0.8, None
+            text_size: self.width, None
             size: self.texture_size
-            center_x: self.parent.width * 0.5
+            #center_x: self.parent.width * 0.5
             center_y: root.height * 0.65  # Position the label above the buttons
+            #valign : 'center'
+            halign : 'left'
 
     RelativeLayout:
         Video:

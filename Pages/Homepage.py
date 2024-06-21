@@ -145,7 +145,7 @@ class SpeechToSignLanguagePage(Screen):
                     if text in ["eat", "hello", "help", "iloveyou", "no", "sorry", "thankyou", "yes"]:
                         source = "../Videos/" + text + ".mp4"
                     else:
-                        source = "../Videos/invalid.mp4"
+                        source = "../Assets/invalid.jpeg"
 
                     video_element.source = source
                     video_element.state = 'play'
@@ -221,11 +221,14 @@ class TextToSpeechPage(Screen):
 
     def set_voice(self, voice):
         voices = self.engine.getProperty('voices')
-        if voice == 'Female':
+        if voice == 'Voice 1':
+            print("v1")
             self.engine.setProperty('voice', voices[0].id)
-        elif voice == 'Male':
+        elif voice == 'Voice 2':
+            print("v2")
             self.engine.setProperty('voice', voices[1].id)
         else:
+            print("def")
             self.engine.setProperty('voice', voices[0].id)
 
     def clear_text(self):

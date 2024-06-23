@@ -1,5 +1,5 @@
-import playsound
 import pyttsx3
+import os
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
@@ -12,6 +12,7 @@ from kivy.graphics import Color, Rectangle
 from kivy.animation import Animation
 import threading
 import speech_recognition as sr
+import subprocess
 
 screen_manager = ScreenManager()
 
@@ -86,7 +87,15 @@ class HoverButton(BoxLayout, HoverBehavior):
         screen_manager.current = 'SpeechToSignLanguagePage'
 
     def go_to_SignLanguageToSpeechPage(self):
-        print("Trying to go to SignLang to speech page, no kv file available")
+        print("Sign Language to Speech")
+        # screen_manager.current = 'SignLanguageToSpeechPage'
+        self.run_main_script()  # Execute main.py script
+
+    def run_main_script(self):
+        print("running manin")
+
+        script_dir = os.path.dirname(os.path.abspath(__file__))  # Get directory of main script
+        subprocess.Popen(["python", os.path.join(script_dir, "main.py")])
 
 
 class MyApp(App):
@@ -110,6 +119,17 @@ class SplashScreen(Screen):
 
 class HomePage(Screen):
     pass
+
+
+class SignLanguageToSpeechPage(Screen):
+    screen_manager = screen_manager
+
+    def on_enter(self):
+        print("Running main.py")
+        subprocess.Popen(["python", "main.py"])
+
+    def go_to_home(self):
+        self.screen_manager.current = 'HomePage'
 
 
 class SpeechToSignLanguagePage(Screen):

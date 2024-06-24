@@ -8,6 +8,7 @@ from kivy.properties import BooleanProperty, ObjectProperty
 from kivy.core.window import Window
 from kivy.factory import Factory
 from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.button import Button
 from kivy.graphics import Color, Rectangle
 from kivy.animation import Animation
 import threading
@@ -49,6 +50,25 @@ class HoverBehavior(object):
 
 
 Factory.register('HoverBehavior', cls=HoverBehavior)
+
+
+class NewButton(Button, HoverBehavior):
+    def __init__(self, **kwargs):
+        super(NewButton, self).__init__(**kwargs)
+        with self.canvas.before:
+            self.bg_color = Color(0.6, 0.6, 0.6, 1)
+            self.rect = Rectangle(pos=self.pos, size=self.size)
+        self.bind(pos=self.update_rect, size=self.update_rect)
+
+    def update_rect(self, *args):
+        self.rect.pos = self.pos
+        self.rect.size = self.size
+
+    def on_enter(self):
+        self.bg_color.rgba = (0.8, 0.8, 0.8, 1)
+
+    def on_leave(self):
+        self.bg_color.rgba = (0.65, 0.65, 0.65, 1)
 
 
 class HoverButton(BoxLayout, HoverBehavior):
@@ -93,12 +113,17 @@ class HoverButton(BoxLayout, HoverBehavior):
 
     def run_main_script(self):
         print("running manin")
-
         script_dir = os.path.dirname(os.path.abspath(__file__))  # Get directory of main script
         subprocess.Popen(["python", os.path.join(script_dir, "main.py")])
 
 
 class MyApp(App):
+    engine = pyttsx3.init()
+
+    def say(self, text):
+        self.engine.say(text)
+        threading.Thread(target=self.engine.runAndWait).start()
+
     def build(self):
         self.title = "Helping you"
         self.screen_manager = screen_manager

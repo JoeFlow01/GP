@@ -16,12 +16,13 @@
             center_x: self.parent.width * 0.5
             center_y: root.height * 0.92  # Position the label above the buttons
 
-        Button:
+        NewButton:
             text: "Start Listening"
             font_size: (root.width + root.height) * 0.015
             size_hint: 0.5, 0.1  # Make the grid layout responsive
             pos_hint: { 'center_x': 0.5, 'center_y': 0.8 }  # Center the grid layout
             on_press: root.recognize_speech_from_mic(video_element,displayer_label)
+            on_enter: app.say("start listening button")
 
         Label:
             text: "Recorded text will be displayed here"
@@ -47,10 +48,11 @@
 
 
 
-        Button:
+        NewButton:
             id: home_btn
             font_size: (root.width + root.height) * 0.01
             text: "Home"  # Button text
             size_hint: 0.2, 0.1  # Button fills the RelativeLayout
             pos_hint: {'center_x': 0.5, 'center_y': 0.1}  # Position below play button
             on_press: root.go_to_home(video_element)  # Bind to Python function for home action
+            on_enter: app.say("go home  button")
